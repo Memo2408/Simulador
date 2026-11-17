@@ -14,17 +14,17 @@ Universidad Autónoma de Aguascalientes · Ingeniería en Sistemas Computacional
   - cuanto del sistema.
 - Genera procesos al azar y siempre tiene uno listo para entrar.
 - Los coloca en memoria con el algoritmo elegido y los atiende con Round Robin: un solo proceso por ciclo.
-- Imprime cada ciclo en el formato del profesor: los procesos como `[id,tamaño,cuanto]` y los huecos como `[0,tamaño,0]`.
+- Imprime cada ciclo en el formato del profesor: los procesos como `[id,tamaño,cuanto]` y los huecos como `[0,tamaño,0]`. Con Buddy, cada bloque lleva además dónde empieza y su tamaño, por ejemplo `@0[1,300,10|512]`.
 - El usuario controla la velocidad y decide cuándo termina la simulación.
 
 ## Equipo
 
 | Quién | Parte | Archivos |
 |---|---|---|
-| Guillermo | Menú, integración y GitHub | `src/main.cpp`, `src/menu.h/.cpp`, `pruebas/diapositiva11.cpp`, `compilar.bat` y los archivos comunes |
+| Guillermo | Menú, integración y GitHub | `src/main.cpp`, `src/menu.h/.cpp`, `pruebas/diapositiva11.cpp`, `pruebas/menu.cpp`, `pruebas/menu_entrada.txt`, `compilar.bat` y los archivos comunes |
 | Germán | Primer Ajuste y generador de procesos | `src/primer_ajuste.h/.cpp`, `src/generador.cpp`, `pruebas/primer_ajuste.cpp` y `pruebas/generador.cpp` |
 | Leonardo | Buddy System | `src/buddy.h/.cpp` y `pruebas/buddy.cpp` |
-| Héctor | Ciclo, Round Robin y control | `src/simulador.h/.cpp`, `pruebas/ciclo.cpp` y `pruebas/generador_falso.cpp` |
+| Héctor | Ciclo, Round Robin y control | `src/simulador.h/.cpp`, `pruebas/ciclo.cpp`, `pruebas/ciclo_azar.cpp` y `pruebas/generador_falso.cpp` |
 
 ## Compilar
 
@@ -60,11 +60,14 @@ Cada prueba es un `.cpp` con su propio `main()` dentro de `pruebas/`. Incluye lo
 | Primer Ajuste | `g++ -std=c++17 -Wall -o pa.exe pruebas\primer_ajuste.cpp src\primer_ajuste.cpp` |
 | Generador | `g++ -std=c++17 -Wall -o gen.exe pruebas\generador.cpp src\generador.cpp` |
 | Buddy System | `g++ -std=c++17 -Wall -o buddy.exe pruebas\buddy.cpp src\buddy.cpp` |
-| Ciclo, con el generador falso | `g++ -std=c++17 -Wall -o ciclo.exe pruebas\ciclo.cpp pruebas\generador_falso.cpp src\simulador.cpp` |
-| Ciclo, con el generador real | `g++ -std=c++17 -Wall -o ciclo.exe pruebas\ciclo.cpp src\generador.cpp src\simulador.cpp` |
+| Ciclo, prueba 1 (generador falso) | `g++ -std=c++17 -Wall -o ciclo.exe pruebas\ciclo.cpp pruebas\generador_falso.cpp src\simulador.cpp` |
+| Ciclo, pruebas 2 y 3 (generador real) | `g++ -std=c++17 -Wall -o ciclo_azar.exe pruebas\ciclo_azar.cpp src\generador.cpp src\simulador.cpp` |
+| Menú | `g++ -std=c++17 -Wall -o menu_prueba.exe pruebas\menu.cpp src\menu.cpp` |
 | Diapositiva 11 | `g++ -std=c++17 -Wall -o d11.exe pruebas\diapositiva11.cpp src\primer_ajuste.cpp src\generador.cpp src\simulador.cpp` |
 
-`pruebas/generador_falso.cpp` solo se compila con las pruebas, nunca junto con `src/generador.cpp`.
+- `pruebas/generador_falso.cpp` solo se compila con las pruebas, nunca junto con `src/generador.cpp`.
+- La prueba del menú lee sus datos de un archivo: `Get-Content pruebas\menu_entrada.txt | .\menu_prueba.exe` en PowerShell, o `menu_prueba.exe < pruebas\menu_entrada.txt` en cmd.
+- `ciclo_azar.exe` termina con `correr()`, que solo se detiene con la tecla S.
 
 ## Cómo se juntan las partes
 
