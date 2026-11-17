@@ -1,0 +1,7 @@
+# Ejecutables y archivos objeto
+*.exe
+*.o
+*.obj
+
+# Configuración local del editor
+.vscode/
