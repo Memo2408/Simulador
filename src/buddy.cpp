@@ -61,13 +61,46 @@ bool Buddy::colocar(Proceso* p) {
     }
 }
 
-void Buddy::descargar(int) {
-    // La liberacion y la condensacion se implementan el jueves.
+void Buddy::descargar(int id) {
+    for (Bloque& bloque : bloques) {
+        if (bloque.proceso != nullptr && bloque.proceso->id == id) {
+            bloque.proceso = nullptr;
+            return;
+        }
+    }
 }
 
 bool Buddy::condensar() {
-    // La condensacion se implementa el jueves.
-    return false;
+    bool unido = false;
+
+    // Los bloques se guardan ordenados por inicio. Dos companeros tienen el
+    // mismo tamano y sus inicios difieren exactamente por ese tamano.
+    bool huboUnion = true;
+    while (huboUnion) {
+        huboUnion = false;
+        for (std::size_t i = 0; i + 1 < bloques.size(); ++i) {
+            const Bloque& izquierda = bloques[i];
+            const Bloque& derecha = bloques[i + 1];
+            if (izquierda.proceso != nullptr || derecha.proceso != nullptr ||
+                izquierda.tamano != derecha.tamano ||
+                izquierda.inicio + izquierda.tamano != derecha.inicio ||
+                izquierda.inicio % (izquierda.tamano * 2) != 0) {
+                continue;
+            }
+
+            std::ostringstream aviso;
+            aviso << "Uniendo bloques @" << izquierda.inicio << " y @"
+                  << derecha.inicio << " de " << izquierda.tamano;
+            avisos.push_back(aviso.str());
+
+            bloques[i].tamano *= 2;
+            bloques.erase(bloques.begin() + i + 1);
+            huboUnion = true;
+            unido = true;
+            break;
+        }
+    }
+    return unido;
 }
 
 std::vector<std::string> Buddy::eventos() {

@@ -105,6 +105,31 @@ int main() {
         }
     }
 
+    {
+        Buddy memoria(1024);
+        Proceso* a = new Proceso{1, 100, 1};
+        Proceso* b = new Proceso{2, 100, 1};
+        bool ok = memoria.colocar(a) && memoria.colocar(b);
+
+        memoria.descargar(1);
+        memoria.descargar(2);
+        const std::string antes =
+            "@0[0,128,0] @128[0,128,0] @256[0,256,0] @512[0,512,0]";
+        ok = memoria.imprimir() == antes && ok;
+        ok = memoria.condensar() && ok;
+
+        const std::string despues = "@0[0,1024,0]";
+        ok = memoria.imprimir() == despues && ok;
+        ok = !memoria.condensar() && ok;
+        memoria.descargar(999); // un id inexistente no debe cambiar el mapa
+        ok = memoria.imprimir() == despues && ok;
+
+        revisar(ok, 5, despues + " tras liberar y unir hasta el bloque mayor",
+                memoria.imprimir());
+        delete a;
+        delete b;
+    }
+
     std::cout << (fallas == 0 ? "Todo bien\n" : "Hay fallas\n");
     return fallas == 0 ? 0 : 1;
 }
